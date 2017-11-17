@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import Search from './components/Search.jsx';
+import AddMovie from './components/AddMovie.jsx';
 
 
 class App extends React.Component {
@@ -16,23 +17,14 @@ class App extends React.Component {
         {title: 'Amelie', user_added: true },
         {title: 'Dunkirk'}
       ],
-      displayedMovies: [],
-      query: '',
-      filter: 'SHOW_ALL'
+      displayedMovies: []
     };
 
-    this.handleSearch = this.handleSearch.bind(this); 
     this.filterMovies = this.filterMovies.bind(this);
+    this.search = this.search.bind(this); 
+    this.addNewMovie = this.addNewMovie.bind(this); 
 
 
-  }
-
-
-  handleSearch(term) {
-    // do something
-    // this.setState({ query: term, filter: 'SEARCHED' });
-    this.filterMovies('SEARCHED', term);
-   
   }
 
   filterMovies(filter, query) {
@@ -61,31 +53,60 @@ class App extends React.Component {
 
   }
 
+  search(term) {
+    this.filterMovies('SEARCHED', term);
+  }
+
+  addNewMovie(title) {
+    this.setState({
+      allMovies: this.state.allMovies.push({
+        title: title,
+        user_added: true
+      })
+    })
+
+    $.ajax({
+      url: '/movies',
+      method: 'POST',
+      data: {title: title},
+      success: (result) => {
+        console.log('Success!', result);
+      },
+      error: (error) => {
+        console.log('Error!', error);
+      }
+    })
+
+
+  }
+
+
   componentDidMount() {
 
-    this.filterMovies('SHOW_ALL');
+    $.ajax({
+      url: '/movies',
+      success: (data) => {
+        console.log('data from ajax GET', data);
+        console.log('this in ajax', this);
+        this.setState({
+          allMovies: data,
+          displayedMovies: data
+        })
+      },
+      error: (err) => {
+        console.log('err', err);
+      }
+    });
 
-
-    // this.filterMovies();
-  //   $.ajax({
-  //     url: '/items',
-  //     success: (data) => {
-  //       this.setState({
-  //         items: data
-  //       })
-  //     },
-  //     error: (err) => {
-  //       console.log('err', err);
-  //     }
-  //   });
   }
 
   render () {
     return (
     <div>
 
-      <p> Search term { this.state.query } </p>
-      <Search handleSearch={ this.handleSearch } />  
+      <Search search={ this.search } />
+      <br />
+      <AddMovie addNewMovie={ this.addNewMovie } />  
       <h1>Item List</h1>
       <List movies={ this.state.displayedMovies } />
     </div>)

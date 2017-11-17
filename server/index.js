@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 // UNCOMMENT THE DATABASE YOU'D LIKE TO USE
-var items = require('../database-mysql');
-// var items = require('../database-mongo');
+var movies = require('../database-mysql');
+// var movies = require('../database-mongo');
 
 var app = express();
 
@@ -13,17 +13,32 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 // app.use(express.static(__dirname + '/../angular-client'));
 // app.use(express.static(__dirname + '/../node_modules'));
 
-app.get('/items', function (req, res) {
-  items.selectAll(function(err, data) {
+app.get('/movies', function (req, res) {
+  movies.selectAll(function(err, data) {
+    console.log('data from selectAll', data);
     if(err) {
       res.sendStatus(500);
     } else {
+      console.log('no err GET');
       res.json(data);
     }
   });
 });
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+app.post('/movies', (req, res) => {
+
+  var title = ''; // Get title from request
+
+  movies.save(title, (err, data) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(201);
+    }
+  })
+})
+
+app.listen(1234, function() {
+  console.log('listening on port 1234!');
 });
 

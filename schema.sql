@@ -4,10 +4,9 @@ CREATE DATABASE test;
 
 USE test;
 
-CREATE TABLE items (
+CREATE TABLE movies (
   id int NOT NULL AUTO_INCREMENT,
-  quantity integer NOT NULL,
-  description varchar(50) NOT NULL,
+  title varchar(50) NOT NULL,
   PRIMARY KEY (ID)
 );
 
