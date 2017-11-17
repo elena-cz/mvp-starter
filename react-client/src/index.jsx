@@ -66,9 +66,8 @@ class App extends React.Component {
     })
 
     $.ajax({
-      url: '/movies',
+      url: `/movies?title=${title}`,
       method: 'POST',
-      data: {title: title},
       success: (result) => {
         console.log('Success!', result);
       },
@@ -86,8 +85,6 @@ class App extends React.Component {
     $.ajax({
       url: '/movies',
       success: (data) => {
-        console.log('data from ajax GET', data);
-        console.log('this in ajax', this);
         this.setState({
           allMovies: data,
           displayedMovies: data

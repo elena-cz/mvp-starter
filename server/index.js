@@ -27,9 +27,7 @@ app.get('/movies', function (req, res) {
 
 app.post('/movies', (req, res) => {
 
-  var title = ''; // Get title from request
-
-  movies.save(title, (err, data) => {
+  movies.save(req.query.title, (err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
